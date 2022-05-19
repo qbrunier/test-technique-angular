@@ -49,15 +49,14 @@ const DEFAULT_CONFIG = {
 describe("PersonListComponent", () => {
 
 	let spectator: Spectator<PersonListComponent>;
-	let spectator2: SpectatorHttp<PersonService>;
+	let spectatorHttp: SpectatorHttp<PersonService>;
 
 	const createHttp = createHttpFactory(PersonService);
 	const createComponent = createComponentFactory({
-        component: PersonListComponent,
-        declarations: [
+		component: PersonListComponent,
+		declarations: [
 			PersonListComponent,
 			PersonGeneratorComponent,
-			//TranslatePipe
 		],
 		imports: [
 			MatTableModule,
@@ -68,37 +67,36 @@ describe("PersonListComponent", () => {
 			HttpClientTestingModule,
 			NoopAnimationsModule,
 			RouterTestingModule.withRoutes([])
-		]	
-    });
+		]
+	});
 
 	beforeEach(() => {
-        spectator = createComponent();
-		//spectator2 = createService();
-		spectator2 = createHttp();
-    });
+		spectator = createComponent();
+		spectatorHttp = createHttp();
+	});
 
 	test('should create', () => {
-        expect(spectator.component).toBeTruthy();
-    });
+		expect(spectator.component).toBeTruthy();
+	});
 
 	test("should provide a list of 3 persons", fakeAsync(() => {
 
-		expect(spectator2.service.getPersons).toBeTruthy();
+		expect(spectatorHttp.service.getPersons).toBeTruthy();
 
-		spectator2.service.getPersons(DEFAULT_CONFIG).subscribe();
-		spectator2.expectOne("/assets/data/persons.json", HttpMethod.GET);
+		spectatorHttp.service.getPersons(DEFAULT_CONFIG).subscribe();
+		spectatorHttp.expectOne("/assets/data/persons.json", HttpMethod.GET);
 
-		spectator2.service.getPersons(DEFAULT_CONFIG).subscribe(element => {
+		spectatorHttp.service.getPersons(DEFAULT_CONFIG).subscribe(element => {
 			expect(element.length).toBe(1);
 			expect(element.map(p => p.id)).toEqual([1, 2, 3]);
 
 		});
 
-		const reqs = spectator2.expectConcurrent([
+		const reqs = spectatorHttp.expectConcurrent([
 			{ url: "/assets/data/persons.json", method: HttpMethod.GET },
 		]);
-	
-		spectator2.flushAll(reqs, [PERSONS]);
+
+		spectatorHttp.flushAll(reqs, [PERSONS]);
 
 	}));
 

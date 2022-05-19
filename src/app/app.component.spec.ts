@@ -8,23 +8,23 @@ describe("AppComponent", () => {
 
 	let spectator: Spectator<AppComponent>;
 	const createComponent = createComponentFactory({
-        component: AppComponent,
-        declarations: [
+		component: AppComponent,
+		declarations: [
 			AppComponent
 		],
 		imports: [
 			RouterTestingModule.withRoutes([])
 		]
-    });
+	});
 
 	beforeEach(() => {
-        spectator = createComponent();
-    });
+		spectator = createComponent();
+	});
 
 
 	test('should create', () => {
-        expect(spectator.component).toBeTruthy();
-    });
+		expect(spectator.component).toBeTruthy();
+	});
 
 	test("should render title in a h1 tag", () => {
 		expect(spectator.element.querySelector("h1").textContent).toContain("Test technique Angular");

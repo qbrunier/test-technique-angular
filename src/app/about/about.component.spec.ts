@@ -10,8 +10,8 @@ describe("AboutComponent", () => {
 
 	let spectator: Spectator<AboutComponent>;
 	const createComponent = createComponentFactory({
-        component: AboutComponent,
-        declarations: [
+		component: AboutComponent,
+		declarations: [
 			AboutComponent
 		],
 		imports: [
@@ -20,16 +20,16 @@ describe("AboutComponent", () => {
 			AboutRoutingModule,
 			RouterTestingModule.withRoutes([])
 		],
-    });
+	});
 
 	beforeEach(() => {
-        spectator = createComponent();
-    });
+		spectator = createComponent();
+	});
 
 
 	test('should create', () => {
-        expect(spectator.component).toBeTruthy();
-    });
+		expect(spectator.component).toBeTruthy();
+	});
 
 
 });

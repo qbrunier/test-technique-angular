@@ -15,8 +15,8 @@ describe("PersonListComponent", () => {
 
 	let spectator: Spectator<PersonListComponent>;
 	const createComponent = createComponentFactory({
-        component: PersonListComponent,
-        declarations: [
+		component: PersonListComponent,
+		declarations: [
 			PersonListComponent,
 			PersonGeneratorComponent
 		],
@@ -29,16 +29,16 @@ describe("PersonListComponent", () => {
 			HttpClientTestingModule,
 			NoopAnimationsModule
 		],
-    });
+	});
 
 	beforeEach(() => {
-        spectator = createComponent();
-    });
+		spectator = createComponent();
+	});
 
 
 	test('should create', () => {
-        expect(spectator.component).toBeTruthy();
-    });
+		expect(spectator.component).toBeTruthy();
+	});
 
 
 });

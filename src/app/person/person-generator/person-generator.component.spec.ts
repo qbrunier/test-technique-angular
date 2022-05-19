@@ -12,8 +12,8 @@ describe("PersonGeneratorComponent", () => {
 
 	let spectator: Spectator<PersonGeneratorComponent>;
 	const createComponent = createComponentFactory({
-        component: PersonGeneratorComponent,
-        declarations: [
+		component: PersonGeneratorComponent,
+		declarations: [
 			PersonGeneratorComponent,
 		],
 		imports: [
@@ -24,16 +24,16 @@ describe("PersonGeneratorComponent", () => {
 			ReactiveFormsModule,
 			NoopAnimationsModule
 		],
-    });
+	});
 
 	beforeEach(() => {
-        spectator = createComponent();
-    });
+		spectator = createComponent();
+	});
 
 
 	test('should create', () => {
-        expect(spectator.component).toBeTruthy();
-    });
+		expect(spectator.component).toBeTruthy();
+	});
 
 
 });
