@@ -1,8 +1,20 @@
-import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
-import { TestBed } from "@angular/core/testing";
-import { Person } from "./person";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { fakeAsync } from "@angular/core/testing";
+import { ReactiveFormsModule } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatInputModule } from "@angular/material/input";
+import { MatTableModule } from "@angular/material/table";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { RouterTestingModule } from "@angular/router/testing";
+import { HttpMethod, SpectatorHttp } from "@ngneat/spectator";
 
+import { createComponentFactory, createHttpFactory, Spectator } from '@ngneat/spectator/jest';
+import { Person } from "./person";
+import { PersonGeneratorComponent } from "./person-generator/person-generator.component";
+import { PersonListComponent } from "./person-list/person-list.component";
 import { PersonService } from "./person.service";
+
 
 const PERSONS: Person[] = [
 	{
@@ -34,31 +46,62 @@ const DEFAULT_CONFIG = {
 	female: true
 };
 
-describe("PersonService", () => {
-	let httpMock: HttpTestingController;
+describe("PersonListComponent", () => {
+
+	let spectator: Spectator<PersonListComponent>;
+	let spectator2: SpectatorHttp<PersonService>;
+
+	const createHttp = createHttpFactory(PersonService);
+	const createComponent = createComponentFactory({
+        component: PersonListComponent,
+        declarations: [
+			PersonListComponent,
+			PersonGeneratorComponent,
+			//TranslatePipe
+		],
+		imports: [
+			MatTableModule,
+			MatCheckboxModule,
+			MatInputModule,
+			MatButtonModule,
+			ReactiveFormsModule,
+			HttpClientTestingModule,
+			NoopAnimationsModule,
+			RouterTestingModule.withRoutes([])
+		]	
+    });
 
 	beforeEach(() => {
-		TestBed.configureTestingModule({
-			imports: [HttpClientTestingModule]
+        spectator = createComponent();
+		//spectator2 = createService();
+		spectator2 = createHttp();
+    });
+
+	test('should create', () => {
+        expect(spectator.component).toBeTruthy();
+    });
+
+	test("should provide a list of 3 persons", fakeAsync(() => {
+
+		expect(spectator2.service.getPersons).toBeTruthy();
+
+		spectator2.service.getPersons(DEFAULT_CONFIG).subscribe();
+		spectator2.expectOne("/assets/data/persons.json", HttpMethod.GET);
+
+		spectator2.service.getPersons(DEFAULT_CONFIG).subscribe(element => {
+			expect(element.length).toBe(1);
+			expect(element.map(p => p.id)).toEqual([1, 2, 3]);
+
 		});
-		httpMock = TestBed.get(HttpTestingController);
-	});
 
-	afterEach(() => httpMock.verify());
+		const reqs = spectator2.expectConcurrent([
+			{ url: "/assets/data/persons.json", method: HttpMethod.GET },
+		]);
+	
+		spectator2.flushAll(reqs, [PERSONS]);
 
-	it("should provide a list of 3 persons", () => {
-		const service: PersonService = TestBed.get(PersonService);
-		expect(service).toBeTruthy();
+	}));
 
-		const persons$ = service.getPersons(DEFAULT_CONFIG);
-		persons$.subscribe(persons => {
-			expect(persons).toBeDefined();
-			expect(persons.length).toBe(1);
-			expect(persons.map(p => p.id)).toEqual([1, 2, 3]);
-		});
 
-		// Call to the resource `persons.json` is not real, only sample `PERSONS` is returned for fake
-		const getPersons = httpMock.expectOne("/assets/data/persons.json");
-		getPersons.flush(PERSONS);
-	});
 });
+

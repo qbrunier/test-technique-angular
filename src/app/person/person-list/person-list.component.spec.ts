@@ -6,40 +6,39 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatInputModule } from "@angular/material/input";
 import { MatTableModule } from "@angular/material/table";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { Spectator } from "@ngneat/spectator";
+import { createComponentFactory } from "@ngneat/spectator/jest";
 import { PersonGeneratorComponent } from "../person-generator/person-generator.component";
-
 import { PersonListComponent } from "./person-list.component";
 
 describe("PersonListComponent", () => {
-	let component: PersonListComponent;
-	let fixture: ComponentFixture<PersonListComponent>;
 
-	beforeEach(async(() => {
-		TestBed.configureTestingModule({
-			declarations: [
-				PersonListComponent,
-				PersonGeneratorComponent
-			],
-			imports: [
-				MatTableModule,
-				MatCheckboxModule,
-				MatInputModule,
-				MatButtonModule,
-				ReactiveFormsModule,
-				HttpClientTestingModule,
-				NoopAnimationsModule
-			]
-		})
-			.compileComponents();
-	}));
+	let spectator: Spectator<PersonListComponent>;
+	const createComponent = createComponentFactory({
+        component: PersonListComponent,
+        declarations: [
+			PersonListComponent,
+			PersonGeneratorComponent
+		],
+		imports: [
+			MatTableModule,
+			MatCheckboxModule,
+			MatInputModule,
+			MatButtonModule,
+			ReactiveFormsModule,
+			HttpClientTestingModule,
+			NoopAnimationsModule
+		],
+    });
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(PersonListComponent);
-		component = fixture.componentInstance;
-		fixture.detectChanges();
-	});
+        spectator = createComponent();
+    });
 
-	it("should create", () => {
-		expect(component).toBeTruthy();
-	});
+
+	test('should create', () => {
+        expect(spectator.component).toBeTruthy();
+    });
+
+
 });
