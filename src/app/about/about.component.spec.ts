@@ -1,25 +1,36 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { CommonModule } from "@angular/common";
+import { MatButtonModule } from "@angular/material/button";
+import { RouterTestingModule } from "@angular/router/testing";
 
+import { createComponentFactory, Spectator } from '@ngneat/spectator/jest';
+import { AboutRoutingModule } from "./about-routing.module";
 import { AboutComponent } from "./about.component";
 
 describe("AboutComponent", () => {
-	let component: AboutComponent;
-	let fixture: ComponentFixture<AboutComponent>;
 
-	beforeEach(async(() => {
-		TestBed.configureTestingModule({
-			declarations: [AboutComponent]
-		})
-			.compileComponents();
-	}));
+	let spectator: Spectator<AboutComponent>;
+	const createComponent = createComponentFactory({
+		component: AboutComponent,
+		declarations: [
+			AboutComponent
+		],
+		imports: [
+			CommonModule,
+			MatButtonModule,
+			AboutRoutingModule,
+			RouterTestingModule.withRoutes([])
+		],
+	});
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(AboutComponent);
-		component = fixture.componentInstance;
-		fixture.detectChanges();
+		spectator = createComponent();
 	});
 
-	it("should create", () => {
-		expect(component).toBeTruthy();
+
+	test('should create', () => {
+		expect(spectator.component).toBeTruthy();
 	});
+
+
 });
+

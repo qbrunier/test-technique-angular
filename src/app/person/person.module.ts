@@ -28,7 +28,7 @@ import { PersonService } from "./person.service";
 	]
 })
 export class PersonModule {
-	static forRoot(): ModuleWithProviders {
+	static forRoot(): ModuleWithProviders<PersonModule> {
 		return {
 			ngModule: PersonModule,
 			providers: [
