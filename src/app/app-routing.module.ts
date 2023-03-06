@@ -10,7 +10,11 @@ export const routes: Routes = [
 		path: "",
 		pathMatch: "full",
 		redirectTo: "personnes"
-	}
+	},
+    {
+        path: "apropos",
+        loadChildren: () => import("./about/about.module").then(m => m.AboutModule)
+    }
 ];
 
 @NgModule({
@@ -21,4 +25,3 @@ export const routes: Routes = [
 })
 export class AppRoutingModule {
 }
-
