@@ -1,38 +1,13 @@
-form {
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
+.field-wrapper {
+    display: flex;
+    flex-direction: column;
+}
 
-	div, mat-form-field {
-		flex: 1;
-		align-items: center;
+mat-error {
+    display: flex;
+    flex-direction: column;
 
-		display: flex;
-		justify-content: center;
-	}
-
-	.title {
-		flex-direction: column;
-
-		div {
-			font-style: italic;
-			font-size: 0.7em;
-		}
-	}
-
-	.count {
-		flex: 1;
-	}
-
-	.gender {
-		display: flex;
-		justify-content: center;
-
-		mat-checkbox {
-			width: 150px;
-		}
-	}
-
-	.actions {
-	}
+    span {
+        display: block;
+    }
 }
