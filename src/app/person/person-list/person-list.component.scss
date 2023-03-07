@@ -1,4 +1,39 @@
 :host {
-	display: flex;
-	flex-direction: column;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+    .table-responsive {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        box-shadow: 0 2px 5px rgb(0 0 0 / 15%);
+        border-radius: 4px;
+
+        .mat-table {
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 1rem;
+            display: table;
+            border-collapse: collapse;
+            margin: 0px;
+        }
+
+        .mat-row,
+        .mat-header-row {
+            display: table-row;
+        }
+
+        .mat-cell,
+        .mat-header-cell {
+            word-wrap: initial;
+            display: table-cell;
+            padding: 0px 25px;
+            line-break: unset;
+            width: auto;
+            white-space: nowrap;
+            overflow: hidden;
+            vertical-align: middle;
+        }
+    }
 }

@@ -1,4 +1,4 @@
-<form [formGroup]="generatorForm" (ngSubmit)="generate()">
+<form class="tile" [formGroup]="generatorForm" (ngSubmit)="generate()">
     <div class="title">
         <h3>Critères de génération :</h3>
         <div class="hint">
@@ -36,14 +36,14 @@
             <mat-checkbox class="Femme" formControlName="female"
                 >Femme</mat-checkbox
             >
-            <mat-error
-                *ngIf="
-                    generatorForm.controls.genderGroup.errors
-                        ?.['requireCheckboxesToBeChecked']
-                "
-                ><span>Veuillez cochez au moins une option</span></mat-error
-            >
         </div>
+        <mat-error
+            *ngIf="
+                generatorForm.controls.genderGroup.errors
+                    ?.['requireCheckboxesToBeChecked']
+            "
+            ><span>Veuillez cochez au moins une option</span></mat-error
+        >
     </div>
 
     <div class="actions">
