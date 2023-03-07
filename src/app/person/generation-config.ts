@@ -4,8 +4,12 @@ export interface GenerationConfig {
     female: boolean
 }
 
-export interface GeneratorErrors {
-    male?: Array<string>
-    female?: Array<string>
-    count?: Array<string>
+export interface GeneratorFormConfig {
+    count: number
+    genderGroup: GenderGroup
+}
+
+export interface GenderGroup {
+    male: boolean
+    female: boolean
 }

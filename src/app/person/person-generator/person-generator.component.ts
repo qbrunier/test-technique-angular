@@ -1,12 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from "@angular/core"
-import {
-    FormBuilder,
-    FormGroup,
-    ValidationErrors,
-    Validators,
-} from "@angular/forms"
-import { Router } from "@angular/router"
-import { GenerationConfig, GeneratorErrors } from "../generation-config"
+import { FormControl, FormGroup, ValidatorFn, Validators } from "@angular/forms"
+import { GenerationConfig, GeneratorFormConfig } from "../generation-config"
 
 @Component({
     selector: "app-person-generator",
@@ -14,86 +8,60 @@ import { GenerationConfig, GeneratorErrors } from "../generation-config"
     styleUrls: ["./person-generator.component.scss"],
 })
 export class PersonGeneratorComponent implements OnInit {
-    generator: FormGroup
-    errors: GeneratorErrors = {
-        male: [],
-        female: [],
-        count: [],
-    }
+    generatorForm: FormGroup
 
     @Output()
     private generateRequest = new EventEmitter<GenerationConfig>()
 
-    constructor(private formBuilder: FormBuilder) {}
+    constructor() {}
 
     ngOnInit() {
-        this.generator = this.formBuilder.group({
-            count: [1000],
-            male: [true],
-            female: [true],
+        this.generatorForm = new FormGroup({
+            count: new FormControl(1000, Validators.required),
+            genderGroup: new FormGroup(
+                {
+                    male: new FormControl(true),
+                    female: new FormControl(true),
+                },
+                this.requireCheckboxesToBeCheckedValidator()
+            ),
         })
     }
 
+    requireCheckboxesToBeCheckedValidator(minRequired = 1): ValidatorFn {
+        return function validate(formGroup: FormGroup) {
+            let checked = 0
+
+            Object.keys(formGroup.controls).forEach((key) => {
+                const control = formGroup.controls[key]
+
+                if (control.value === true) {
+                    checked++
+                }
+            })
+
+            if (checked < minRequired) {
+                return {
+                    requireCheckboxesToBeChecked: true,
+                }
+            }
+
+            return null
+        }
+    }
+
     generate() {
-        const value: GenerationConfig = this.generator.value
-
-        if (!value.male && !value.female) {
-            if (
-                !this.errors.male.find(
-                    (err) => err === "La case Homme ou Femme doit être coché."
-                )
-            ) {
-                this.errors.male.push("La case Homme ou Femme doit être coché.")
+        const value: GenerationConfig = [this.generatorForm.value].map(
+            (el: GeneratorFormConfig) => {
+                return {
+                    count: el.count,
+                    male: el.genderGroup.male,
+                    female: el.genderGroup.female,
+                }
             }
+        )[0]
 
-            if (
-                !this.errors.female.find(
-                    (err) => err === "La case Homme ou Femme doit être coché."
-                )
-            ) {
-                this.errors.female.push(
-                    "La case Homme ou Femme doit être coché."
-                )
-            }
-        } else {
-            this.errors.male = []
-            this.errors.female = []
-        }
-
-        if (!value.count) {
-            if (
-                !this.errors.count.find(
-                    (err) => err === "Ce champ de formulaire est obligatoire"
-                )
-            ) {
-                this.errors.count.push("Ce champ de formulaire est obligatoire")
-            }
-        } else {
-            this.errors.count = this.errors.count.filter(
-                (err) => err !== "Ce champ de formulaire est obligatoire"
-            )
-        }
-
-        if (value.count && (value.count > 1000 || value.count < 1)) {
-            if (
-                !this.errors.count.find(
-                    (err) => err === "Saisissez une valeur entre 1 et 1000"
-                )
-            ) {
-                this.errors.count.push("Saisissez une valeur entre 1 et 1000")
-            }
-        } else {
-            this.errors.count = this.errors.count.filter(
-                (err) => err !== "Saisissez une valeur entre 1 et 1000"
-            )
-        }
-
-        if (
-            this.generator.valid &&
-            this.errors.count.length === 0 &&
-            this.errors.male.length === 0 &&
-            this.errors.female.length === 0
-        ) {
+        if (this.generatorForm.valid) {
             this.generateRequest.emit(value)
         }
     }

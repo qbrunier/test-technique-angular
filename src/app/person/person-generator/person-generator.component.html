@@ -1,4 +1,4 @@
-<form [formGroup]="generator" (ngSubmit)="generate()">
+<form [formGroup]="generatorForm" (ngSubmit)="generate()">
     <div class="title">
         <h3>Critères de génération :</h3>
         <div class="hint">
@@ -15,31 +15,43 @@
                 type="number"
                 placeholder="Nombre"
                 formControlName="count"
+                pattern="^([1-9][0-9]{0,2}|1000)$"
             />
         </mat-form-field>
-        <mat-error *ngIf="errors && errors.count && errors.count.length > 0">
-            <span *ngFor="let error of errors.count">{{ error }}</span>
+        <mat-error *ngIf="generatorForm.controls.count">
+            <span *ngIf="generatorForm.controls.count.errors?.['required']"
+                >Ce champ est obligatoire</span
+            >
+            <span *ngIf="generatorForm.controls.count.errors?.['pattern']"
+                >Veuillez saisir une valeur entre 1 et 1000</span
+            >
         </mat-error>
     </div>
 
     <div class="gender">
-        <mat-checkbox class="Homme" formControlName="male">Homme</mat-checkbox>
-        <mat-error *ngIf="errors && errors.male && errors.male.length > 0">
-            <span *ngFor="let error of errors.male">{{ error }}</span>
-        </mat-error>
-
-        <mat-checkbox class="Femme" formControlName="female"
-            >Femme</mat-checkbox
-        >
-        <mat-error *ngIf="errors && errors.female && errors.female.length > 0"
-            ><span *ngFor="let error of errors.female">{{
-                error
-            }}</span></mat-error
-        >
+        <div class="form-group" formGroupName="genderGroup">
+            <mat-checkbox class="Homme" formControlName="male"
+                >Homme</mat-checkbox
+            >
+            <mat-checkbox class="Femme" formControlName="female"
+                >Femme</mat-checkbox
+            >
+            <mat-error
+                *ngIf="
+                    generatorForm.controls.genderGroup.errors
+                        ?.['requireCheckboxesToBeChecked']
+                "
+                ><span>Veuillez cochez au moins une option</span></mat-error
+            >
+        </div>
     </div>
 
     <div class="actions">
-        <button mat-raised-button type="submit" [disabled]="generator.invalid">
+        <button
+            mat-raised-button
+            type="submit"
+            [disabled]="generatorForm.invalid"
+        >
             Générer
         </button>
     </div>
